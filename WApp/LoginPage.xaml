@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WApp.LoginPage"
+             BackgroundColor="#f0f4f8">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="30" Spacing="20" VerticalOptions="Center">
+
+            <!-- Logo/Title -->
+            <Label Text="💪 Workout App"
+                   FontSize="36"
+                   FontAttributes="Bold"
+                   TextColor="#667eea"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,0,0,30"/>
+
+            <!-- Login/Register Toggle -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="0"
+                   HasShadow="True">
+                <Grid ColumnDefinitions="*,*" HeightRequest="50">
+                    <Button x:Name="LoginTabButton"
+                            Text="Login"
+                            BackgroundColor="#667eea"
+                            TextColor="White"
+                            CornerRadius="15"
+                            Clicked="OnLoginTabClicked"
+                            Grid.Column="0"/>
+                    <Button x:Name="RegisterTabButton"
+                            Text="Register"
+                            BackgroundColor="White"
+                            TextColor="#667eea"
+                            CornerRadius="15"
+                            Clicked="OnRegisterTabClicked"
+                            Grid.Column="1"/>
+                </Grid>
+            </Frame>
+
+            <!-- Login Form -->
+            <VerticalStackLayout x:Name="LoginForm" Spacing="15" IsVisible="True">
+                <Frame BackgroundColor="White" CornerRadius="15" Padding="20" HasShadow="True">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Username" 
+                               FontSize="14" 
+                               TextColor="#2d3748"
+                               FontAttributes="Bold"/>
+                        <Entry x:Name="LoginUsernameEntry"
+                               Placeholder="Enter username"
+                               BackgroundColor="#f5f7fa"
+                               TextColor="#2d3748"/>
+
+                        <Label Text="Password" 
+                               FontSize="14" 
+                               TextColor="#2d3748"
+                               FontAttributes="Bold"
+                               Margin="0,10,0,0"/>
+                        <Entry x:Name="LoginPasswordEntry"
+                               Placeholder="Enter password"
+                               IsPassword="True"
+                               BackgroundColor="#f5f7fa"
+                               TextColor="#2d3748"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Button Text="Login"
+                        BackgroundColor="#667eea"
+                        TextColor="White"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        CornerRadius="15"
+                        HeightRequest="55"
+                        Clicked="OnLoginClicked"/>
+            </VerticalStackLayout>
+
+            <!-- Register Form -->
+            <VerticalStackLayout x:Name="RegisterForm" Spacing="15" IsVisible="False">
+                <Frame BackgroundColor="White" CornerRadius="15" Padding="20" HasShadow="True">
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="Username" 
+                               FontSize="14" 
+                               TextColor="#2d3748"
+                               FontAttributes="Bold"/>
+                        <Entry x:Name="RegisterUsernameEntry"
+                               Placeholder="Choose a username"
+                               BackgroundColor="#f5f7fa"
+                               TextColor="#2d3748"/>
+
+                        <Label Text="Password" 
+                               FontSize="14" 
+                               TextColor="#2d3748"
+                               FontAttributes="Bold"
+                               Margin="0,10,0,0"/>
+                        <Entry x:Name="RegisterPasswordEntry"
+                               Placeholder="Choose password"
+                               IsPassword="True"
+                               BackgroundColor="#f5f7fa"
+                               TextColor="#2d3748"/>
+
+                        <Label Text="Confirm Password" 
+                               FontSize="14" 
+                               TextColor="#2d3748"
+                               FontAttributes="Bold"
+                               Margin="0,10,0,0"/>
+                        <Entry x:Name="RegisterConfirmPasswordEntry"
+                               Placeholder="Re-enter password"
+                               IsPassword="True"
+                               BackgroundColor="#f5f7fa"
+                               TextColor="#2d3748"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <Button Text="Register"
+                        BackgroundColor="#667eea"
+                        TextColor="White"
+                        FontSize="18"
+                        FontAttributes="Bold"
+                        CornerRadius="15"
+                        HeightRequest="55"
+                        Clicked="OnRegisterClicked"/>
+            </VerticalStackLayout>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator x:Name="LoadingIndicator" 
+                             IsRunning="False"
+                             IsVisible="False"
+                             Color="#667eea"
+                             HeightRequest="50"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WApp.MainPage"
+             BackgroundColor="#f8f9fa">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <!-- Header with Back and Logout Buttons -->
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="0,10,0,20">
+                <Button Text="← back"
+                        BackgroundColor="#667eea"
+                        TextColor="White"
+                        CornerRadius="10"
+                        Padding="15,10"
+                        FontSize="14"
+                        Grid.Column="0"
+                        Clicked="OnBackClicked"/>
+
+                <Label Text="create workout plan"
+                       FontSize="26"
+                       FontAttributes="Bold"
+                       TextColor="#667eea"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center"
+                       Grid.Column="1"/>
+
+                <Button x:Name="LogoutButton"
+                        Text="🚪 logout"
+                        BackgroundColor="#ef4444"
+                        TextColor="White"
+                        CornerRadius="10"
+                        Padding="15,10"
+                        FontSize="14"
+                        Grid.Column="2"
+                        Clicked="OnLogoutClicked"
+                        VerticalOptions="Center"/>
+            </Grid>
+
+            <!-- History Picker -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="workout history" FontSize="16" FontAttributes="Bold" TextColor="#2d3748"/>
+                    <Picker x:Name="historyPicker" FontSize="14">
+                        <Picker.Items>
+                            <x:String>beginner</x:String>
+                            <x:String>intermediate</x:String>
+                            <x:String>advanced</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Goal Picker -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="goal" FontSize="16" FontAttributes="Bold" TextColor="#2d3748"/>
+                    <Picker x:Name="goalPicker" FontSize="14">
+                        <Picker.Items>
+                            <x:String>weight loss</x:String>
+                            <x:String>muscle gain</x:String>
+                            <x:String>fitness improvement</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Amount of Workouts -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="workouts per week" FontSize="16" FontAttributes="Bold" TextColor="#2d3748"/>
+                    <Picker x:Name="amountworkouts" FontSize="14">
+                        <Picker.Items>
+                            <x:String>2</x:String>
+                            <x:String>3</x:String>
+                            <x:String>4</x:String>
+                            <x:String>5</x:String>
+                            <x:String>6</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Birth Date -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="birth date" FontSize="16" FontAttributes="Bold" TextColor="#2d3748"/>
+                    <DatePicker x:Name="birthDatePicker" 
+                                FontSize="14"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Location Picker -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="workout location" FontSize="16" FontAttributes="Bold" TextColor="#2d3748"/>
+                    <Picker x:Name="locationPicker" FontSize="14">
+                        <Picker.Items>
+                            <x:String>gym</x:String>
+                            <x:String>home</x:String>
+                            <x:String>outdoor</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Height -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="height (cm)" FontSize="16" FontAttributes="Bold" TextColor="#2d3748"/>
+                    <Entry x:Name="heightPicker" 
+                           Keyboard="Numeric" 
+                           Placeholder="example: 175"
+                           FontSize="14"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Weight -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="weight (kg)" FontSize="16" FontAttributes="Bold" TextColor="#2d3748"/>
+                    <Entry x:Name="weightPicker" 
+                           Keyboard="Numeric" 
+                           Placeholder="example: 70"
+                           FontSize="14"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Submit Button -->
+            <Button Text="create workout plan"
+                    BackgroundColor="#667eea"
+                    TextColor="White"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    CornerRadius="15"
+                    HeightRequest="60"
+                    Clicked="OnSendButtonClicked"
+                    Margin="0,10,0,20"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

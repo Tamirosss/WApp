@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WApp.HomePage"
+             BackgroundColor="#f8f9fa">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="30" VerticalOptions="Center">
+
+            <!-- Header with Logout Button -->
+            <Grid ColumnDefinitions="*,Auto" Margin="0,20,0,0">
+                <Label Text="Fit4You"
+                       FontSize="36"
+                       FontAttributes="Bold"
+                       TextColor="#667eea"
+                       HorizontalOptions="Start"
+                       VerticalOptions="Center"/>
+
+                <Button x:Name="LogoutButton"
+                        Text="🚪 Log out"
+                        BackgroundColor="#ef4444"
+                        TextColor="White"
+                        CornerRadius="10"
+                        Padding="15,10"
+                        FontSize="14"
+                        Grid.Column="1"
+                        Clicked="OnLogoutClicked"
+                        VerticalOptions="Center"/>
+            </Grid>
+
+            <!-- Welcome Message -->
+            <Frame BackgroundColor="White" 
+                   CornerRadius="15" 
+                   Padding="20"
+                   HasShadow="True"
+                   Margin="0,0,0,20">
+                <VerticalStackLayout Spacing="10">
+                    <Label x:Name="WelcomeLabel"
+                           FontSize="24"
+                           FontAttributes="Bold"
+                           TextColor="#2d3748"
+                           HorizontalTextAlignment="Center"/>
+                    <Label Text="What would you like to do today?"
+                           FontSize="16"
+                           TextColor="#718096"
+                           HorizontalTextAlignment="Center"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- My Workout Plan Button -->
+            <Button x:Name="MyWorkoutButton"
+                    Text="📋 My Plan"
+                    BackgroundColor="#667eea"
+                    TextColor="White"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    CornerRadius="15"
+                    HeightRequest="80"
+                    Clicked="OnMyWorkoutClicked"/>
+
+            <Label x:Name="NoWorkoutLabel"
+                   Text="(You don't have a saved training plan)"
+                   FontSize="14"
+                   TextColor="#ef4444"
+                   HorizontalTextAlignment="Center"
+                   Margin="0,-20,0,0"
+                   IsVisible="False"/>
+
+            <!-- Create New Workout Button -->
+            <Button Text="✨ Create a New Plan"
+                    BackgroundColor="#10b981"
+                    TextColor="White"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    CornerRadius="15"
+                    HeightRequest="80"
+                    Clicked="OnCreateNewWorkoutClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

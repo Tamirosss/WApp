@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="WApp.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:WApp"
+    Title="WApp">
+
+
+    <TabBar>
+        <Tab Title="Create Workout">
+            <ShellContent
+                ContentTemplate="{DataTemplate local:MainPage}"/>
+        </Tab>
+        <Tab Title="Other">
+            <ShellContent
+                ContentTemplate="{DataTemplate local:WorkoutPage}"/>
+        </Tab>
+    </TabBar>
+
+</Shell>
