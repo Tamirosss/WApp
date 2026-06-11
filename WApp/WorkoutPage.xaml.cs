@@ -1,4 +1,10 @@
-﻿using Microsoft.Maui.Controls;
+﻿
+// ============================================================
+// WorkoutPage.xaml.cs
+// עמוד הצגת תוכנית האימון - מציג ימים, תרגילים, טיימר וסרטונים
+// חשוב: קובץ זה מחליף לחלוטין את WorkoutPage.xaml.cs המקורי
+// ============================================================
+using Microsoft.Maui.Controls;
 using Newtonsoft.Json;
 
 namespace WApp
@@ -6,16 +12,23 @@ namespace WApp
     public partial class WorkoutPage : ContentPage
     {
         private readonly ApiService _apiService;
-        private const string BaseUrl = "http://localhost:5000";
+        private const string BaseUrl = "http://fit4you.185.181.10.185.sslip.io";
+
+        // שומר את אינדקס היום הנוכחי שמוצג
         private int currentDayIndex = 0;
 
         public WorkoutPage()
         {
             InitializeComponent();
             _apiService = new ApiService();
+
+            // טעינת היום הראשון בפתיחת העמוד
             LoadWorkoutDay(0);
         }
 
+        // ============================================================
+        // כפתור התנתקות - מבקש אישור, מוחק את נתוני המשתמש ומחזיר למסך ההתחברות
+        // ============================================================
         private async void OnLogoutClicked(object sender, EventArgs e)
         {
             bool confirm = await DisplayAlert(
@@ -27,6 +40,11 @@ namespace WApp
 
             if (confirm)
             {
+                // מחיקת נתוני המשתמש מהזיכרון הקבוע
+                Preferences.Remove("UserId");
+                Preferences.Remove("Username");
+
+                // איפוס הסשן הזמני
                 UserSession.Username = null;
                 UserSession.UserId = 0;
                 UserSession.IsLoggedIn = false;
@@ -35,30 +53,37 @@ namespace WApp
             }
         }
 
+        // ============================================================
+        // כפתור חזור - חוזר לעמוד הראשי
+        // ============================================================
         private async void OnBackClicked(object sender, EventArgs e)
         {
             await Navigation.PopToRootAsync();
         }
 
+        // ============================================================
+        // טוענת ומציגה את האימון של יום מסוים לפי אינדקס
+        // dayIndex - מספר היום (0 = יום ראשון)
+        // ============================================================
         private void LoadWorkoutDay(int dayIndex)
         {
+            // בדיקה שיש אימונים
             if (DataHolder.Workouts == null || DataHolder.Workouts.Length == 0)
             {
                 DisplayAlert("Error", "No workouts available", "OK");
                 return;
             }
 
+            // בדיקה שהאינדקס בטווח התקין
             if (dayIndex < 0 || dayIndex >= DataHolder.Workouts.Length)
-            {
                 return;
-            }
 
             currentDayIndex = dayIndex;
             WorkoutsContainer.Children.Clear();
 
             var workout = DataHolder.Workouts[dayIndex];
 
-            // Day Navigation Header
+            // ---- בניית כותרת ניווט בין ימים ----
             var navFrame = new Frame
             {
                 BackgroundColor = Color.FromArgb("#667eea"),
@@ -80,7 +105,7 @@ namespace WApp
                 ColumnSpacing = 10
             };
 
-            // Previous Button
+            // כפתור יום קודם - מושבת אם אנחנו ביום הראשון
             var prevButton = new Button
             {
                 Text = "◀",
@@ -95,7 +120,7 @@ namespace WApp
             navGrid.Children.Add(prevButton);
             Grid.SetColumn(prevButton, 0);
 
-            // Day Info
+            // תצוגת מידע על היום הנוכחי
             var dayInfoStack = new VerticalStackLayout
             {
                 Spacing = 5,
@@ -125,7 +150,7 @@ namespace WApp
             navGrid.Children.Add(dayInfoStack);
             Grid.SetColumn(dayInfoStack, 1);
 
-            // Next Button
+            // כפתור יום הבא - מושבת אם אנחנו ביום האחרון
             var nextButton = new Button
             {
                 Text = "▶",
@@ -143,7 +168,7 @@ namespace WApp
             navFrame.Content = navGrid;
             WorkoutsContainer.Children.Add(navFrame);
 
-            // Exercise Count Info
+            // תצוגת מספר התרגילים ביום זה
             var infoLabel = new Label
             {
                 Text = $"💪 {workout.Excercises?.Length ?? 0} exercises today",
@@ -155,30 +180,28 @@ namespace WApp
             };
             WorkoutsContainer.Children.Add(infoLabel);
 
-            // Exercises
+            // הצגת רשימת התרגילים
             if (workout.Excercises == null || workout.Excercises.Length == 0)
             {
-                var noExercisesLabel = new Label
+                WorkoutsContainer.Children.Add(new Label
                 {
                     Text = "No exercises for this day",
                     FontSize = 14,
                     TextColor = Colors.Gray,
                     HorizontalTextAlignment = TextAlignment.Center,
                     Margin = new Thickness(0, 20, 0, 20)
-                };
-                WorkoutsContainer.Children.Add(noExercisesLabel);
+                });
             }
             else
             {
-                for (int exerciseIndex = 0; exerciseIndex < workout.Excercises.Length; exerciseIndex++)
+                for (int i = 0; i < workout.Excercises.Length; i++)
                 {
-                    var exercise = workout.Excercises[exerciseIndex];
-                    var exerciseFrame = CreateExerciseFrame(exercise, currentDayIndex, exerciseIndex);
+                    var exerciseFrame = CreateExerciseFrame(workout.Excercises[i], currentDayIndex, i);
                     WorkoutsContainer.Children.Add(exerciseFrame);
                 }
             }
 
-            // Day Indicator Dots
+            // נקודות ניווט בתחתית - מראות את מספר הימים והיום הנוכחי
             var dotsStack = new HorizontalStackLayout
             {
                 HorizontalOptions = LayoutOptions.Center,
@@ -188,19 +211,25 @@ namespace WApp
 
             for (int i = 0; i < DataHolder.Workouts.Length; i++)
             {
-                var dot = new BoxView
+                dotsStack.Children.Add(new BoxView
                 {
                     WidthRequest = i == currentDayIndex ? 30 : 10,
                     HeightRequest = 10,
                     CornerRadius = 5,
-                    BackgroundColor = i == currentDayIndex ? Color.FromArgb("#667eea") : Color.FromArgb("#cbd5e1")
-                };
-                dotsStack.Children.Add(dot);
+                    BackgroundColor = i == currentDayIndex
+                        ? Color.FromArgb("#667eea")
+                        : Color.FromArgb("#cbd5e1")
+                });
             }
 
             WorkoutsContainer.Children.Add(dotsStack);
         }
 
+        // ============================================================
+        // יוצרת כרטיסיית UI עבור תרגיל בודד
+        // exercise - נתוני התרגיל
+        // dayIndex, exerciseIndex - מיקום התרגיל במערך לצורך עריכה
+        // ============================================================
         private Frame CreateExerciseFrame(Excercise exercise, int dayIndex, int exerciseIndex)
         {
             var exerciseFrame = new Frame
@@ -212,11 +241,9 @@ namespace WApp
                 Margin = new Thickness(0, 0, 0, 15)
             };
 
-            var exerciseStack = new VerticalStackLayout
-            {
-                Spacing = 15
-            };
+            var exerciseStack = new VerticalStackLayout { Spacing = 15 };
 
+            // ---- שורת כותרת: שם התרגיל + כפתור עריכה ----
             var headerGrid = new Grid
             {
                 ColumnDefinitions =
@@ -237,6 +264,7 @@ namespace WApp
             headerGrid.Children.Add(nameLabel);
             Grid.SetColumn(nameLabel, 0);
 
+            // כפתור עריכה - פותח תפריט לשינוי פרטי התרגיל
             var editButton = new Button
             {
                 Text = "✏️",
@@ -253,14 +281,15 @@ namespace WApp
 
             exerciseStack.Children.Add(headerGrid);
 
-            var separator = new BoxView
+            // קו מפריד צבעוני
+            exerciseStack.Children.Add(new BoxView
             {
                 HeightRequest = 3,
                 BackgroundColor = Color.FromArgb("#667eea"),
                 HorizontalOptions = LayoutOptions.FillAndExpand
-            };
-            exerciseStack.Children.Add(separator);
+            });
 
+            // ---- תצוגת פרטי התרגיל: סטים, מנוחה, חזרות ----
             var detailsGrid = new Grid
             {
                 ColumnDefinitions =
@@ -286,7 +315,7 @@ namespace WApp
 
             exerciseStack.Children.Add(detailsGrid);
 
-            // Button Grid
+            // ---- כפתורי פעולה: סרטון ב-YouTube וטיימר מנוחה ----
             var buttonGrid = new Grid
             {
                 ColumnDefinitions =
@@ -328,18 +357,30 @@ namespace WApp
             return exerciseFrame;
         }
 
+        // ============================================================
+        // פותח חיפוש יוטיוב ישיר לתרגיל - תמיד עובד!
+        // קודם מנסה מאגר מקומי, אחרת חיפוש יוטיוב ישיר
+        // ============================================================
         private async Task OpenYouTubeVideo(string exerciseName)
         {
             try
             {
+                // 1. ניסיון מאגר מקומי
                 string videoUrl = ExerciseVideoDatabase.GetVideoUrl(exerciseName);
+
+                // 2. אם לא נמצא - חיפוש ישיר ביוטיוב
+                if (videoUrl == null)
+                {
+                    string searchQuery = Uri.EscapeDataString($"{exerciseName} exercise tutorial proper form");
+                    videoUrl = $"https://www.youtube.com/results?search_query={searchQuery}";
+                    Console.WriteLine($"[VIDEO] Not in DB, searching YouTube for: {exerciseName}");
+                }
+
                 Console.WriteLine($"[VIDEO] Opening: {videoUrl}");
                 bool opened = await Launcher.Default.OpenAsync(videoUrl);
 
                 if (!opened)
-                {
                     await DisplayAlert("Error", "Could not open browser", "OK");
-                }
             }
             catch (Exception ex)
             {
@@ -348,6 +389,10 @@ namespace WApp
             }
         }
 
+        // ============================================================
+        // פותח עמוד טיימר מנוחה מודאלי עם ספירה לאחור
+        // seconds - כמות השניות למנוחה
+        // ============================================================
         private async Task OpenTimer(int seconds)
         {
             var timerPage = new ContentPage
@@ -372,6 +417,7 @@ namespace WApp
                 HorizontalTextAlignment = TextAlignment.Center
             };
 
+            // תצוגת הזמן הנותר
             var timeLabel = new Label
             {
                 Text = FormatTime(seconds),
@@ -381,6 +427,7 @@ namespace WApp
                 HorizontalTextAlignment = TextAlignment.Center
             };
 
+            // פס התקדמות - מתרוקן ככל שהזמן עובר
             var progressBar = new ProgressBar
             {
                 Progress = 1.0,
@@ -400,6 +447,7 @@ namespace WApp
                 Margin = new Thickness(0, 40, 0, 0)
             };
 
+            // משתנים לניהול מצב הטיימר
             bool isRunning = false;
             bool isPaused = false;
             int remainingSeconds = seconds;
@@ -439,6 +487,7 @@ namespace WApp
                 Margin = new Thickness(0, 20, 0, 0)
             };
 
+            // לחיצה על Start/Pause - מתחיל או משהה את הטיימר
             startPauseButton.Clicked += async (s, e) =>
             {
                 if (!isRunning)
@@ -449,6 +498,7 @@ namespace WApp
                     startPauseButton.BackgroundColor = Color.FromArgb("#f59e0b");
                     startPauseButton.TextColor = Colors.White;
 
+                    // לולאת הטיימר - מעדכנת כל שנייה
                     while (isRunning && remainingSeconds > 0)
                     {
                         await Task.Delay(1000);
@@ -470,6 +520,7 @@ namespace WApp
                 }
                 else
                 {
+                    // השהיית הטיימר
                     isPaused = true;
                     isRunning = false;
                     startPauseButton.Text = "▶️ Resume";
@@ -478,6 +529,7 @@ namespace WApp
                 }
             };
 
+            // לחיצה על Reset - מאפסת את הטיימר להתחלה
             resetButton.Clicked += (s, e) =>
             {
                 isRunning = false;
@@ -490,6 +542,7 @@ namespace WApp
                 startPauseButton.TextColor = Color.FromArgb("#10b981");
             };
 
+            // לחיצה על Close - סוגרת את הטיימר וחוזרת לדף האימון
             closeButton.Clicked += async (s, e) =>
             {
                 isRunning = false;
@@ -513,6 +566,10 @@ namespace WApp
             await Navigation.PushModalAsync(timerPage, animated: true);
         }
 
+        // ============================================================
+        // ממיר שניות לפורמט MM:SS להצגה בטיימר
+        // לדוגמה: 90 → "01:30"
+        // ============================================================
         private string FormatTime(int seconds)
         {
             int mins = seconds / 60;
@@ -520,6 +577,9 @@ namespace WApp
             return $"{mins:D2}:{secs:D2}";
         }
 
+        // ============================================================
+        // פותח תפריט עריכה לתרגיל - מאפשר החלפה, שינוי סטים/חזרות/מנוחה
+        // ============================================================
         private async Task OnEditExerciseClicked(int dayIndex, int exerciseIndex)
         {
             var exercise = DataHolder.Workouts[dayIndex].Excercises[exerciseIndex];
@@ -551,6 +611,9 @@ namespace WApp
             }
         }
 
+        // ============================================================
+        // מבקשת מה-API תרגיל חלופי ומחליפה את התרגיל הנוכחי
+        // ============================================================
         private async Task ReplaceExercise(int dayIndex, int exerciseIndex)
         {
             var currentExercise = DataHolder.Workouts[dayIndex].Excercises[exerciseIndex];
@@ -564,6 +627,7 @@ namespace WApp
 
             if (!confirm) return;
 
+            // הצגת מסך טעינה בזמן שמחפשים תרגיל חלופי
             var loadingPage = new ContentPage
             {
                 Content = new VerticalStackLayout
@@ -601,6 +665,7 @@ namespace WApp
 
                 if (!string.IsNullOrEmpty(json))
                 {
+                    // החלפת התרגיל בנתונים ורענון התצוגה
                     var newExercise = JsonConvert.DeserializeObject<Excercise>(json);
                     DataHolder.Workouts[dayIndex].Excercises[exerciseIndex] = newExercise;
 
@@ -621,6 +686,9 @@ namespace WApp
             }
         }
 
+        // ============================================================
+        // מאפשרת למשתמש לשנות את מספר הסטים לתרגיל
+        // ============================================================
         private async Task ChangeSets(int dayIndex, int exerciseIndex)
         {
             var exercise = DataHolder.Workouts[dayIndex].Excercises[exerciseIndex];
@@ -641,6 +709,9 @@ namespace WApp
             }
         }
 
+        // ============================================================
+        // מאפשרת למשתמש לשנות את מספר החזרות לתרגיל
+        // ============================================================
         private async Task ChangeReps(int dayIndex, int exerciseIndex)
         {
             var exercise = DataHolder.Workouts[dayIndex].Excercises[exerciseIndex];
@@ -661,6 +732,9 @@ namespace WApp
             }
         }
 
+        // ============================================================
+        // מאפשרת למשתמש לשנות את זמן המנוחה בין סטים
+        // ============================================================
         private async Task ChangeRestTime(int dayIndex, int exerciseIndex)
         {
             var exercise = DataHolder.Workouts[dayIndex].Excercises[exerciseIndex];
@@ -681,6 +755,10 @@ namespace WApp
             }
         }
 
+        // ============================================================
+        // יוצרת פריים קטן להצגת פרט אחד של תרגיל (סטים/מנוחה/חזרות)
+        // label - שם הפרט, value - הערך להצגה
+        // ============================================================
         private Frame CreateDetailFrame(string label, string value)
         {
             var frame = new Frame
@@ -697,27 +775,24 @@ namespace WApp
                 Spacing = 5
             };
 
-            var labelControl = new Label
+            stack.Children.Add(new Label
             {
                 Text = label,
                 FontSize = 12,
                 TextColor = Color.FromArgb("#718096"),
                 HorizontalTextAlignment = TextAlignment.Center
-            };
+            });
 
-            var valueControl = new Label
+            stack.Children.Add(new Label
             {
                 Text = value,
                 FontSize = 28,
                 FontAttributes = FontAttributes.Bold,
                 TextColor = Color.FromArgb("#667eea"),
                 HorizontalTextAlignment = TextAlignment.Center
-            };
+            });
 
-            stack.Children.Add(labelControl);
-            stack.Children.Add(valueControl);
             frame.Content = stack;
-
             return frame;
         }
     }

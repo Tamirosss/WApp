@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 This is the minimum required version of the Apple Privacy Manifest for .NET MAUI apps.
-The contents below are needed because of APIs that are used in the .NET framework and .NET MAUI SDK.
+The contents below are needed because of 
+s that are used in the .NET framework and .NET MAUI SDK.
 
 You are responsible for adding extra entries as needed for your application.
 

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="WApp.GymsNearbyPage"
+             BackgroundColor="#f8f9fa">
+
+    <Grid RowDefinitions="Auto,*">
+        <!-- Header -->
+        <Grid ColumnDefinitions="Auto,*,Auto" 
+              Padding="20,20,20,10"
+              Grid.Row="0">
+
+            <Button Text="← Back"
+                    BackgroundColor="#667eea"
+                    TextColor="White"
+                    CornerRadius="10"
+                    Padding="15,10"
+                    FontSize="14"
+                    Grid.Column="0"
+                    Clicked="OnBackClicked"/>
+
+            <Label Text="Gyms Nearby"
+                   FontSize="26"
+                   FontAttributes="Bold"
+                   TextColor="#667eea"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Grid.Column="1"/>
+
+            <Button Text="🚪 Logout"
+                    BackgroundColor="#ef4444"
+                    TextColor="White"
+                    CornerRadius="10"
+                    Padding="15,10"
+                    FontSize="14"
+                    Grid.Column="2"
+                    Clicked="OnLogoutClicked"/>
+        </Grid>
+
+        <!-- Content -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout x:Name="GymsContainer" 
+                                 Padding="20" 
+                                 Spacing="15">
+
+                <!-- Location Status -->
+                <Frame BackgroundColor="White" 
+                       CornerRadius="15" 
+                       Padding="20"
+                       HasShadow="True"
+                       x:Name="LocationFrame">
+                    <VerticalStackLayout Spacing="10">
+                        <Label x:Name="LocationStatusLabel"
+                               Text="📍 Detecting your location..."
+                               FontSize="16"
+                               TextColor="#667eea"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- Gyms List will be added here dynamically -->
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+
+</ContentPage>

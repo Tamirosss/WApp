@@ -62,6 +62,9 @@
 		<Compile Update="HomePage.xaml.cs">
 			<DependentUpon>HomePage.xaml</DependentUpon>
 		</Compile>
+		<Compile Update="GymsNearbyPage.xaml.cs">
+		  <DependentUpon>GymsNearbyPage.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -70,6 +73,9 @@
 		</MauiXaml>
 		<MauiXaml Update="HomePage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="GymsNearbyPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="WorkoutPage.xaml">
 			<Generator>MSBuild:Compile</Generator>

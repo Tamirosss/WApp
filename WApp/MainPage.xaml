@@ -38,6 +38,19 @@
                         VerticalOptions="Center"/>
             </Grid>
 
+            <!-- Gender Picker -->
+            <Frame BackgroundColor="White" CornerRadius="15" Padding="15" HasShadow="True">
+                <VerticalStackLayout Spacing="10">
+                    <Label Text="gender" FontSize="16" FontAttributes="Bold" TextColor="#2d3748"/>
+                    <Picker x:Name="genderPicker" FontSize="14">
+                        <Picker.Items>
+                            <x:String>male</x:String>
+                            <x:String>female</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+            </Frame>
+
             <!-- History Picker -->
             <Frame BackgroundColor="White" CornerRadius="15" Padding="15" HasShadow="True">
                 <VerticalStackLayout Spacing="10">

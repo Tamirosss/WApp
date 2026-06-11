@@ -9,7 +9,7 @@
 
             <!-- Header with Logout Button -->
             <Grid ColumnDefinitions="*,Auto" Margin="0,20,0,0">
-                <Label Text="Fit4You"
+                <Label Text="Workout App"
                        FontSize="36"
                        FontAttributes="Bold"
                        TextColor="#667eea"
@@ -17,7 +17,7 @@
                        VerticalOptions="Center"/>
 
                 <Button x:Name="LogoutButton"
-                        Text="🚪 Log out"
+                        Text="🚪 Logout"
                         BackgroundColor="#ef4444"
                         TextColor="White"
                         CornerRadius="10"
@@ -49,7 +49,7 @@
 
             <!-- My Workout Plan Button -->
             <Button x:Name="MyWorkoutButton"
-                    Text="📋 My Plan"
+                    Text="📋 My Workout Plan"
                     BackgroundColor="#667eea"
                     TextColor="White"
                     FontSize="20"
@@ -59,7 +59,7 @@
                     Clicked="OnMyWorkoutClicked"/>
 
             <Label x:Name="NoWorkoutLabel"
-                   Text="(You don't have a saved training plan)"
+                   Text="(No saved workout plan)"
                    FontSize="14"
                    TextColor="#ef4444"
                    HorizontalTextAlignment="Center"
@@ -67,7 +67,7 @@
                    IsVisible="False"/>
 
             <!-- Create New Workout Button -->
-            <Button Text="✨ Create a New Plan"
+            <Button Text="✨ Create New Workout"
                     BackgroundColor="#10b981"
                     TextColor="White"
                     FontSize="20"
@@ -75,6 +75,16 @@
                     CornerRadius="15"
                     HeightRequest="80"
                     Clicked="OnCreateNewWorkoutClicked"/>
+
+            <!-- Find Gyms Nearby Button -->
+            <Button Text="🏋️ Find Gyms Nearby"
+                    BackgroundColor="#f59e0b"
+                    TextColor="White"
+                    FontSize="20"
+                    FontAttributes="Bold"
+                    CornerRadius="15"
+                    HeightRequest="80"
+                    Clicked="OnFindGymsClicked"/>
 
         </VerticalStackLayout>
     </ScrollView>
