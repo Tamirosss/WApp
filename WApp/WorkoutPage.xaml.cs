@@ -1,4 +1,3 @@
-﻿
 // ============================================================
 // WorkoutPage.xaml.cs
 // עמוד הצגת תוכנית האימון - מציג ימים, תרגילים, טיימר וסרטונים
@@ -6,6 +5,7 @@
 // ============================================================
 using Microsoft.Maui.Controls;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace WApp
 {
@@ -668,6 +668,7 @@ namespace WApp
                     // החלפת התרגיל בנתונים ורענון התצוגה
                     var newExercise = JsonConvert.DeserializeObject<Excercise>(json);
                     DataHolder.Workouts[dayIndex].Excercises[exerciseIndex] = newExercise;
+                    await SaveWorkoutToServer();   // שמירת השינוי בשרת
 
                     await Navigation.PopModalAsync();
                     await DisplayAlert("Success", $"Exercise replaced with {newExercise.Name}", "OK");
@@ -705,6 +706,7 @@ namespace WApp
             if (int.TryParse(result, out int newSets) && newSets > 0)
             {
                 exercise.Sets = newSets;
+                await SaveWorkoutToServer();   // שמירת השינוי בשרת
                 LoadWorkoutDay(currentDayIndex);
             }
         }
@@ -728,6 +730,7 @@ namespace WApp
             if (int.TryParse(result, out int newReps) && newReps > 0)
             {
                 exercise.Reps = newReps;
+                await SaveWorkoutToServer();   // שמירת השינוי בשרת
                 LoadWorkoutDay(currentDayIndex);
             }
         }
@@ -751,7 +754,47 @@ namespace WApp
             if (int.TryParse(result, out int newRestTime) && newRestTime > 0)
             {
                 exercise.RestTime = newRestTime;
+                await SaveWorkoutToServer();   // שמירת השינוי בשרת
                 LoadWorkoutDay(currentDayIndex);
+            }
+        }
+
+        // ============================================================
+        // שומרת את התוכנית הנוכחית (מהזיכרון) בחזרה לשרת
+        // נקראת אחרי כל שינוי של סטים/חזרות/מנוחה/תרגיל כדי שהשינוי יישמר
+        // ============================================================
+        private async Task SaveWorkoutToServer()
+        {
+            try
+            {
+                if (DataHolder.Workouts == null || DataHolder.Workouts.Length == 0)
+                    return;
+
+                string url = $"{BaseUrl}/save-workout?userId={UserSession.UserId}";
+
+                // ממירים את התוכנית למבנה ה-JSON שהשרת מצפה לו (excercises עם שני e)
+                var payload = DataHolder.Workouts.Select(w => new
+                {
+                    name = w.Name,
+                    excercises = w.Excercises.Select(ex => new
+                    {
+                        name = ex.Name,
+                        sets = ex.Sets,
+                        reps = ex.Reps,
+                        restTime = ex.RestTime,
+                        videoLink = ex.VideoLink
+                    })
+                });
+
+                string jsonContent = JsonConvert.SerializeObject(payload);
+                await _apiService.PostJsonAsync(url, jsonContent);
+
+                Console.WriteLine("[SAVE] Workout changes sent to server");
+            }
+            catch (Exception ex)
+            {
+                // שמירה שקטה - לא מטרידים את המשתמש בהודעת שגיאה על כל שינוי קטן
+                Console.WriteLine($"[SAVE] Error saving workout: {ex.Message}");
             }
         }
 
